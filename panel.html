@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: Arial;
+        padding: 20px;
+      }
+      h2 {
+        color: #1a73e8;
+      }
+      label {
+        font-weight: bold;
+      }
+      input, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        background-color: #1a73e8;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0c5bd8;
+      }
+      #msg {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Panel de Ventas – Tecnocool</h2>
+
+    <label>ID Cliente</label>
+    <input id="customer_id" placeholder="Ej: CUST-001">
+
+    <label>ID Producto</label>
+    <input id="product_id" placeholder="Ej: SKU-001">
+
+    <label>Cantidad</label>
+    <input id="quantity" type="number" min="1">
+
+    <label>Almacén</label>
+    <input id="warehouse_id" placeholder="Ej: ALM-01">
+
+    <button onclick="sendSale()">Registrar Venta</button>
+
+    <div id="msg"></div>
+
+    <script>
+      function sendSale() {
+        const sale = {
+          sale_id: "SALE-" + new Date().getTime(),
+          sale_type: "Mostrador",
+          customer_id: document.getElementById("customer_id").value,
+          product_id: document.getElementById("product_id").value,
+          quantity: Number(document.getElementById("quantity").value),
+          warehouse_id: document.getElementById("warehouse_id").value,
+          user: "Rafael",
+          created_at: new Date()
+        };
+
+        google.script.run
+          .withSuccessHandler(msg => {
+            document.getElementById("msg").innerHTML = "✔ " + msg;
+            document.getElementById("msg").style.color = "green";
+          })
+          .withFailureHandler(err => {
+            document.getElementById("msg").innerHTML = "✖ " + err.message;
+            document.getElementById("msg").style.color = "red";
+          })
+          .processSale(sale);
+      }
+    </script>
+  </body>
+</html>
